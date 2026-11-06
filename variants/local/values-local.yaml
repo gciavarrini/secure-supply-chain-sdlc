@@ -1,0 +1,58 @@
+# Single-cluster variant (decision #4): the full remediation loop on one OpenShift
+# cluster. Dev/test/prod promotion (E4) will be namespaces + Git overlays on top of
+# this clustergroup — not separate clusters.
+#
+# SCAFFOLD STATE (E3.1): namespaces and Argo projects are declared; the component
+# applications are listed below but COMMENTED OUT until each is wired and validated
+# (E3.2–E3.8), so the scaffold cannot install something half-configured.
+clusterGroup:
+  name: secure-supply-chain-sdlc
+  namespaces:
+    # Tekton tasks, triggers, and the ChatOps machinery (E3.2–E3.6)
+    ssf-pipelines:
+    # Reference Git provider — Gitea via the org's gitea-chart (E3.7)
+    ssf-git:
+    # Registry — Quay, with staging/production separation enforced (E3.5, E4.4)
+    ssf-registry:
+    # Where the demo application's dev/test/prod overlays will live (E4)
+    ssf-app:
+  argoProjects:
+    - ssf-pipelines
+    - ssf-git
+    - ssf-registry
+    - ssf-app
+  # Component applications are listed below but COMMENTED OUT until each is wired
+  # and validated (E3.2–E3.8), so the scaffold cannot install something
+  # half-configured. (An empty map keeps the clustergroup schema happy.)
+  applications: {}
+    # --- Wired in E3.7: pipeline engine ---
+    # cluster-pipelines:
+    #   name: cluster-pipelines
+    #   namespace: ssf-pipelines
+    #   argoProject: ssf-pipelines
+    #   chart: cluster-pipelines
+    #   chartVersion: x.y.*   # pin exact version when validated
+    #
+    # --- Wired in E3.7: reference Git provider ---
+    # gitea:
+    #   name: gitea
+    #   namespace: ssf-git
+    #   argoProject: ssf-git
+    #   chart: gitea
+    #   chartVersion: x.y.*   # pin exact version when validated
+    #
+    # --- Wired in E3.5: registry ---
+    # quay:
+    #   name: quay
+    #   namespace: ssf-registry
+    #   argoProject: ssf-registry
+    #   chart: quay
+    #   chartVersion: x.y.*   # pin exact version when validated
+    #
+    # --- The pattern's own charts (contract stubs, ChatOps listener) land in
+    #     charts/all/ and are referenced by path, e.g.:
+    # chatops-listener:
+    #   name: chatops-listener
+    #   namespace: ssf-pipelines
+    #   argoProject: ssf-pipelines
+    #   path: charts/all/chatops-listener

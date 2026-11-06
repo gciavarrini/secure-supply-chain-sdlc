@@ -1,0 +1,14 @@
+---
+global:
+  pattern: secure-supply-chain-sdlc
+  # Decision #4: single cluster — one Argo CD instance, stages are namespaces.
+  singleArgoCD: true
+  options:
+    useCSV: false
+    syncPolicy: Automatic
+    installPlanApproval: Automatic
+main:
+  variant: local
+  multiSourceConfig:
+    enabled: true
+    clusterGroupChartVersion: "0.9.*"

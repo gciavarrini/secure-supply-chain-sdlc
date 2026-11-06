@@ -1,0 +1,34 @@
+# Pattern metadata — source of truth for documentation and QE.
+metadata_version: "1.0"
+name: secure-supply-chain-sdlc
+description: >-
+  Human-in-the-loop CVE remediation: ChatOps commands (/remediate, /generate-tests)
+  drive Tekton pipelines that detect vulnerabilities, open remediation PRs, generate
+  regression tests, and promote signed builds — with every tool behind a swappable
+  contract.
+pattern_version: "0.1.0"
+display_name: Secure Supply Chain SDLC
+repo_url: https://github.com/project-lightpath/secure-supply-chain-sdlc
+issues_url: https://github.com/project-lightpath/secure-supply-chain-sdlc/issues
+# docs_url / ci_url / logo: set when the pattern is submitted to the catalog (E6).
+tier: sandbox
+owners: gciavarrini
+requirements:
+  hub:
+    compute:
+      # Sizing TBD — measured during the E3.9 clean-cluster redeploy runs, per layer:
+      #   stub baseline (no external services), community profile (SonarQube, Nexus,
+      #   Quay, Vault), RH tier (RHTPA/RHTAS), AI profile (in-cluster LLM).
+      # Deliberately not guessed here; pattern-metadata is what QE sizes clusters from.
+    controlPlane:
+      # See above — single standard OpenShift control plane, nothing special required.
+external_requirements: []
+extra_features:
+  hypershift_support: false
+  spoke_support: false
+variants:
+  - name: local
+    default: true
+    description: >-
+      Single-cluster variant (decision #4): the full remediation loop on one OpenShift
+      cluster, with dev/test/prod as namespaces and Git overlays rather than clusters.
